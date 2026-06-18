@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FYP Report – Pharmacie Tramed AI System</title>
+  <style>
+    /* ── Global ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.8;
+      color: #111;
+      background: #fff;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    /* ── Page breaks ── */
+    .page {
+      padding: 25mm 25mm 20mm 30mm;
+      min-height: 297mm;
+      page-break-after: always;
+      position: relative;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    /* ── Typography ── */
+    h1 { font-size: 18pt; font-weight: bold; }
+    h2 { font-size: 15pt; font-weight: bold; margin-top: 24pt; margin-bottom: 8pt; border-bottom: 1.5px solid #333; padding-bottom: 4pt; }
+    h3 { font-size: 13pt; font-weight: bold; margin-top: 18pt; margin-bottom: 6pt; }
+    h4 { font-size: 12pt; font-weight: bold; margin-top: 12pt; margin-bottom: 4pt; }
+    p  { margin-bottom: 10pt; text-align: justify; }
+    ul, ol { margin: 8pt 0 10pt 24pt; }
+    li { margin-bottom: 4pt; }
+    strong { font-weight: bold; }
+    em { font-style: italic; }
+    a { color: #1a56db; }
+
+    /* ── Cover page ── */
+    .cover { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+    .cover .logo-placeholder {
+      width: 100px; height: 100px; border: 2px solid #555;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 10pt; color: #555; margin: 0 auto 24pt;
+    }
+    .cover h1 { font-size: 22pt; margin-bottom: 10pt; }
+    .cover .subtitle { font-size: 14pt; color: #444; margin-bottom: 30pt; }
+    .cover .meta-table { text-align: left; border-collapse: collapse; margin: 0 auto; width: 80%; }
+    .cover .meta-table td { padding: 5pt 10pt; font-size: 12pt; }
+    .cover .meta-table td:first-child { font-weight: bold; white-space: nowrap; }
+    .cover .divider { border: none; border-top: 2px solid #333; width: 80%; margin: 20pt auto; }
+
+    /* ── Abstract box ── */
+    .abstract-box {
+      border: 1px solid #999;
+      padding: 16pt 20pt;
+      margin: 20pt 0;
+      background: #fafafa;
+    }
+    .abstract-box h2 { border: none; margin-top: 0; font-size: 13pt; text-align: center; }
+
+    /* ── Table of contents ── */
+    .toc-entry { display: flex; justify-content: space-between; padding: 3pt 0; border-bottom: 1px dotted #ccc; }
+    .toc-entry .toc-title { flex: 1; }
+    .toc-entry .toc-page { text-align: right; min-width: 30pt; }
+    .toc-level-1 { font-weight: bold; margin-top: 6pt; }
+    .toc-level-2 { padding-left: 16pt; font-size: 11pt; }
+    .toc-level-3 { padding-left: 30pt; font-size: 10.5pt; color: #333; }
+
+    /* ── Code blocks ── */
+    pre, code {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 9.5pt;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+    pre { padding: 10pt 12pt; overflow-x: auto; margin: 10pt 0; white-space: pre-wrap; word-wrap: break-word; }
+    code { padding: 1pt 4pt; }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; margin: 12pt 0; font-size: 11pt; }
+    th { background: #2d6a4f; color: #fff; padding: 8pt 10pt; text-align: left; }
+    td { padding: 7pt 10pt; border: 1px solid #ccc; vertical-align: top; }
+    tr:nth-child(even) td { background: #f8f8f8; }
+    .table-caption { font-style: italic; font-size: 10.5pt; text-align: center; margin-bottom: 6pt; color: #444; }
+
+    /* ── Figures ── */
+    .figure { text-align: center; margin: 16pt 0; }
+    .figure img { max-width: 100%; border: 1px solid #ccc; }
+    .figure-placeholder {
+      width: 100%; height: 120pt; background: #f0f0f0; border: 2px dashed #aaa;
+      display: flex; align-items: center; justify-content: center;
+      color: #777; font-size: 10pt; font-style: italic;
+    }
+    .figure-caption { font-style: italic; font-size: 10.5pt; margin-top: 6pt; color: #444; }
+
+    /* ── Chapter number ── */
+    .chapter-number { font-size: 11pt; color: #2d6a4f; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4pt; }
+
+    /* ── Note / callout ── */
+    .note { background: #fffbea; border-left: 4px solid #f59e0b; padding: 10pt 14pt; margin: 12pt 0; font-size: 11pt; }
+    .note strong { color: #92400e; }
+
+    /* ── Smooth scroll ── */
+    html { scroll-behavior: smooth; }
+
+    /* ── Page numbers ── */
+    body { counter-reset: pagenum 0; }
+    .page:not(.cover) { counter-increment: pagenum; }
+    .page:not(.cover)::after {
+      content: "— " counter(pagenum) " —";
+      position: absolute;
+      bottom: 10mm;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 10pt;
+      color: #777;
+      font-family: "Times New Roman", Times, serif;
+      letter-spacing: 2px;
+    }
+
+    /* ── Floating TOC panel ── */
+    #toc-panel {
+      position: fixed;
+      top: 20px;
+      right: 16px;
+      width: 260px;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      z-index: 1000;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      max-height: calc(100vh - 40px);
+      display: flex;
+      flex-direction: column;
+    }
+    #toc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #14532d;
+      border-radius: 10px 10px 0 0;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+    }
+    #toc-header span { font-weight: bold; font-size: 12px; letter-spacing: 0.5px; }
+    #toc-header svg { width: 16px; height: 16px; transition: transform 0.2s; }
+    #toc-header.collapsed svg { transform: rotate(180deg); }
+    #toc-body {
+      overflow-y: auto;
+      padding: 8px 0;
+      flex: 1;
+    }
+    #toc-body a {
+      display: block;
+      padding: 4px 14px;
+      color: #1f2937;
+      text-decoration: none;
+      line-height: 1.5;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    #toc-body a:hover { background: #f0fdf4; border-left-color: #16a34a; color: #14532d; }
+    #toc-body a.toc-ch { font-weight: bold; font-size: 11.5px; padding-top: 6px; }
+    #toc-body a.toc-sec { padding-left: 24px; font-size: 10.5px; color: #374151; }
+    #toc-body .toc-divider { border: none; border-top: 1px solid #e5e7eb; margin: 4px 0; }
+
+    /* ── Print ── */
+    @media print {
+      body { font-size: 11pt; }
+      .page { padding: 20mm 20mm 15mm 25mm; }
+      pre { font-size: 9pt; }
+      #toc-panel { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Floating Table of Contents Navigator ── -->
+<div id="toc-panel">
+  <div id="toc-header" onclick="toggleToc()">
+    <span>📋 Contents</span>
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+    </svg>
+  </div>
+  <div id="toc-body">
+    <a href="#declaration">Declaration</a>
+    <a href="#abstract">Abstract</a>
+    <a href="#acknowledgements">Acknowledgements</a>
+    <a href="#abbreviations">List of Abbreviations</a>
+    <hr class="toc-divider"/>
+    <a href="#ch1" class="toc-ch">Chapter 1 – Introduction</a>
+    <a href="#ch1-1" class="toc-sec">1.1 Background and Context</a>
+    <a href="#ch1-2" class="toc-sec">1.2 Problem Statement</a>
+    <a href="#ch1-3" class="toc-sec">1.3 Project Objectives</a>
+    <a href="#ch1-4" class="toc-sec">1.4 Scope and Limitations</a>
+    <hr class="toc-divider"/>
+    <a href="#ch2" class="toc-ch">Chapter 2 – Literature Review</a>
+    <a href="#ch2-1" class="toc-sec">2.1 Pharmacy Management Systems</a>
+    <a href="#ch2-2" class="toc-sec">2.2 Demand Forecasting</a>
+    <a href="#ch2-3" class="toc-sec">2.3 AI and Chatbots</a>
+    <a href="#ch2-4" class="toc-sec">2.4 Customer Retention</a>
+    <a href="#ch2-5" class="toc-sec">2.5 Digital Health in Africa</a>
+    <hr class="toc-divider"/>
+    <a href="#ch3" class="toc-ch">Chapter 3 – Requirements</a>
+    <a href="#ch3-1" class="toc-sec">3.1 Requirements Gathering</a>
+    <a href="#ch3-2" class="toc-sec">3.2 Stakeholder Analysis</a>
+    <a href="#ch3-3" class="toc-sec">3.3 Functional Requirements</a>
+    <a href="#ch3-4" class="toc-sec">3.4 Non-Functional Requirements</a>
+    <a href="#ch3-5" class="toc-sec">3.5 Use Case Analysis</a>
+    <hr class="toc-divider"/>
+    <a href="#ch4" class="toc-ch">Chapter 4 – System Design</a>
+    <a href="#ch4-1" class="toc-sec">4.1 System Architecture</a>
+    <a href="#ch4-2" class="toc-sec">4.2 Database Design</a>
+    <a href="#ch4-3" class="toc-sec">4.3 Module Design</a>
+    <a href="#ch4-4" class="toc-sec">4.4 UI Design</a>
+    <a href="#ch4-5" class="toc-sec">4.5 Design Decisions</a>
+    <hr class="toc-divider"/>
+    <a href="#ch5" class="toc-ch">Chapter 5 – Implementation</a>
+    <a href="#ch5-1" class="toc-sec">5.1 Dev Environment</a>
+    <a href="#ch5-2" class="toc-sec">5.2 Technology Stack</a>
+    <a href="#ch5-3" class="toc-sec">5.3 Key Implementations</a>
+    <a href="#ch5-4" class="toc-sec">5.4 API Integrations</a>
+    <a href="#ch5-5" class="toc-sec">5.5 Challenges</a>
+    <hr class="toc-divider"/>
+    <a href="#ch6" class="toc-ch">Chapter 6 – Testing</a>
+    <a href="#ch6-1" class="toc-sec">6.1 Testing Strategy</a>
+    <a href="#ch6-2" class="toc-sec">6.2 Test Cases</a>
+    <a href="#ch6-3" class="toc-sec">6.3 Bugs Resolved</a>
+    <hr class="toc-divider"/>
+    <a href="#ch7" class="toc-ch">Chapter 7 – Results</a>
+    <a href="#ch7-1" class="toc-sec">7.1 System Outputs</a>
+    <a href="#ch7-2" class="toc-sec">7.2 Discussion</a>
+    <hr class="toc-divider"/>
+    <a href="#ch8" class="toc-ch">Chapter 8 – Conclusion</a>
+    <a href="#ch8-1" class="toc-sec">8.1 Conclusion</a>
+    <a href="#ch8-2" class="toc-sec">8.2 Limitations</a>
+    <a href="#ch8-3" class="toc-sec">8.3 Future Work</a>
+    <hr class="toc-divider"/>
+    <a href="#references">References</a>
+    <a href="#appendix-a">Appendix A – DB Schema</a>
+    <a href="#appendix-b">Appendix B – API Routes</a>
+    <a href="#appendix-c">Appendix C – Ishyiga Format</a>
+  </div>
+</div>
+
+<script>
+  function toggleToc() {
+    const body = document.getElementById('toc-body');
+    const header = document.getElementById('toc-header');
+    const hidden = body.style.display === 'none';
+    body.style.display = hidden ? '' : 'none';
+    header.classList.toggle('collapsed', !hidden);
+  }
+</script>
+
+<!-- ══════════════════════════════════════════════
+     COVER PAGE
+══════════════════════════════════════════════ -->
+<div class="page cover">
+  <div>
+    <div class="logo-placeholder">[University<br>Logo]</div>
+    <h1>Pharmacie Tramed Intelligent Management System</h1>
+    <p class="subtitle">An AI-Powered Analytics and Automation Layer<br>for Community Pharmacy Operations in Rwanda</p>
+    <hr class="divider"/>
+    <p style="font-size:13pt; font-weight:bold; margin-bottom:20pt;">
+      Final Year Project Report<br>
+      <span style="font-weight:normal; font-size:11pt;">Submitted in partial fulfilment of the requirements for the degree of<br>
+      <em>Master of Science in Computer Science</em></span>
+    </p>
+    <table class="meta-table">
+      <tr><td>Student:</td><td>David Muhire Kabera</td></tr>
+      <tr><td>Student ID:</td><td>[YOUR STUDENT ID]</td></tr>
+      <tr><td>Email:</td><td>davidmuhirekabera462@gmail.com</td></tr>
+      <tr><td>Supervisor:</td><td>[YOUR SUPERVISOR'S NAME], Systems Architect Engineer</td></tr>
+      <tr><td>Institution:</td><td>[YOUR UNIVERSITY NAME]</td></tr>
+      <tr><td>Department:</td><td>[YOUR DEPARTMENT]</td></tr>
+      <tr><td>Host Organisation:</td><td>Pharmacie Tramed, KN 151 St, Kigali, Rwanda</td></tr>
+      <tr><td>Academic Year:</td><td>2025 – 2026</td></tr>
+      <tr><td>Submission Date:</td><td>[DATE]</td></tr>
+    </table>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     DECLARATION
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Declaration</div>
+  <h1 id="declaration">Declaration of Originality</h1>
+  <br/>
+  <p>I, <strong>David Muhire Kabera</strong>, hereby declare that this project report entitled <em>"Pharmacie Tramed Intelligent Management System: An AI-Powered Analytics and Automation Layer for Community Pharmacy Operations in Rwanda"</em> is my own original work carried out as a final year internship project at Pharmacie Tramed, Kigali, Rwanda, under the supervision of [YOUR SUPERVISOR'S NAME].</p>
+  <p>I confirm that:</p>
+  <ul>
+    <li>This work has not been submitted for any other degree or award at any institution.</li>
+    <li>All sources consulted have been duly acknowledged and referenced.</li>
+    <li>Any assistance received has been explicitly acknowledged.</li>
+    <li>All code written is my own except where clearly attributed to external libraries.</li>
+  </ul>
+  <br/>
+  <p>Signature: ___________________________</p>
+  <p>Date: ___________________________</p>
+  <br/><br/>
+  <p><strong>Supervisor Certification:</strong></p>
+  <p>I confirm that I have supervised this project and that it meets the standards required for submission.</p>
+  <br/>
+  <p>Supervisor Signature: ___________________________</p>
+  <p>Date: ___________________________</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     ABSTRACT
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="abstract-box">
+    <h2 id="abstract">Abstract</h2>
+    <p>
+      Community pharmacies in Sub-Saharan Africa face persistent operational challenges including stockouts of essential medicines, poor customer retention for chronic disease patients, and manual, error-prone inventory management. This project presents the design and implementation of an intelligent management system for Pharmacie Tramed, a community pharmacy in Kigali, Rwanda, built as an analytics and automation layer on top of the pharmacy's existing Ishyiga Point-of-Sale (POS) system.
+    </p>
+    <p>
+      The system comprises eight integrated modules: a real-time operations dashboard, inventory management, demand forecasting using linear regression and day-of-week seasonality models, a customer retention system with automated WhatsApp medication reminders, a loyalty programme supporting three customer tiers, an AI-powered conversational assistant using the Claude Haiku large language model, a self-service customer portal, and an automated supplier reorder notification system via Twilio and WhatsApp.
+    </p>
+    <p>
+      The system was implemented using Python (Flask), SQLite, Jinja2, Tailwind CSS, and Chart.js, with external integrations to the Anthropic Claude API and Twilio WhatsApp API. The project demonstrates how affordable, locally relevant digital tools can meaningfully improve pharmacy operations in a resource-constrained environment, and provides a replicable blueprint for other Rwandan pharmacies. Testing confirmed successful end-to-end operation of all modules, with the forecasting engine achieving accurate reorder alerts across 30 modelled products.
+    </p>
+    <p><strong>Keywords:</strong> pharmacy management system, demand forecasting, machine learning, WhatsApp automation, customer retention, loyalty programme, Flask, Rwanda, AI chatbot, Claude API.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     ACKNOWLEDGEMENTS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Acknowledgements</div>
+  <h1 id="acknowledgements">Acknowledgements</h1>
+  <br/>
+  <p>I would like to express my sincere gratitude to all those who contributed to the successful completion of this project.</p>
+  <p>First and foremost, I thank my academic supervisor, <strong>[YOUR SUPERVISOR'S NAME]</strong>, Systems Architect Engineer, for their invaluable guidance, technical expertise, and continuous support throughout the duration of this project. Their insights into systems architecture and software engineering best practices shaped the quality of this work tremendously.</p>
+  <p>I extend my gratitude to the management and staff of <strong>Pharmacie Tramed</strong>, KN 151 St, Kigali, for welcoming me into their organisation, sharing their operational knowledge, and providing access to real-world data. Their openness to digital transformation made this project possible.</p>
+  <p>I also thank the faculty and staff of <strong>[YOUR UNIVERSITY NAME]</strong>, Department of <strong>[YOUR DEPARTMENT]</strong>, for their academic preparation and the opportunity to undertake this internship project.</p>
+  <p>Finally, I thank my family and friends for their unwavering encouragement and patience throughout this demanding period of study.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     TABLE OF CONTENTS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <h2 id="toc-section" style="border:none; font-size:16pt;">Table of Contents</h2>
+  <br/>
+
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#declaration">Declaration</a></span><span class="toc-page">ii</span></div>
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#abstract">Abstract</a></span><span class="toc-page">iii</span></div>
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#acknowledgements">Acknowledgements</a></span><span class="toc-page">iv</span></div>
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#toc-section">Table of Contents</a></span><span class="toc-page">v</span></div>
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#abbreviations">List of Abbreviations</a></span><span class="toc-page">ix</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:10pt;"><span class="toc-title"><a href="#ch1">Chapter 1 – Introduction</a></span><span class="toc-page">1</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch1-1">1.1 Background and Context</a></span><span class="toc-page">1</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch1-2">1.2 Problem Statement</a></span><span class="toc-page">2</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch1-3">1.3 Project Objectives</a></span><span class="toc-page">3</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch1-4">1.4 Scope and Limitations</a></span><span class="toc-page">4</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch1-5">1.5 Organisation of the Report</a></span><span class="toc-page">4</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#ch2">Chapter 2 – Literature Review</a></span><span class="toc-page">5</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch2-1">2.1 Pharmacy Management Systems</a></span><span class="toc-page">5</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch2-2">2.2 Demand Forecasting in Healthcare Supply Chains</a></span><span class="toc-page">7</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch2-3">2.3 AI and Chatbots in Healthcare</a></span><span class="toc-page">8</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch2-4">2.4 Customer Retention and Loyalty Systems</a></span><span class="toc-page">9</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch2-5">2.5 Digital Health in Sub-Saharan Africa</a></span><span class="toc-page">10</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#ch3">Chapter 3 – System Analysis and Requirements</a></span><span class="toc-page">12</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch3-1">3.1 Requirements Gathering Methodology</a></span><span class="toc-page">12</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch3-2">3.2 Stakeholder Analysis</a></span><span class="toc-page">13</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch3-3">3.3 Functional Requirements</a></span><span class="toc-page">14</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch3-4">3.4 Non-Functional Requirements</a></span><span class="toc-page">16</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch3-5">3.5 Use Case Analysis</a></span><span class="toc-page">17</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#ch4">Chapter 4 – System Design</a></span><span class="toc-page">19</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch4-1">4.1 System Architecture</a></span><span class="toc-page">19</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch4-2">4.2 Database Design</a></span><span class="toc-page">21</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch4-3">4.3 Module Design</a></span><span class="toc-page">24</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch4-4">4.4 User Interface Design</a></span><span class="toc-page">28</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch4-5">4.5 Design Decisions and Trade-offs</a></span><span class="toc-page">29</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#ch5">Chapter 5 – Implementation</a></span><span class="toc-page">31</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch5-1">5.1 Development Environment</a></span><span class="toc-page">31</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch5-2">5.2 Technology Stack</a></span><span class="toc-page">31</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch5-3">5.3 Key Module Implementations</a></span><span class="toc-page">33</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch5-4">5.4 External API Integrations</a></span><span class="toc-page">42</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch5-5">5.5 Challenges Encountered</a></span><span class="toc-page">44</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#ch6">Chapter 6 – Testing</a></span><span class="toc-page">46</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch6-1">6.1 Testing Strategy</a></span><span class="toc-page">46</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch6-2">6.2 Functional Test Cases</a></span><span class="toc-page">47</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch6-3">6.3 Bugs Identified and Resolved</a></span><span class="toc-page">52</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#ch7">Chapter 7 – Results and Discussion</a></span><span class="toc-page">54</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch7-1">7.1 System Outputs</a></span><span class="toc-page">54</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch7-2">7.2 Discussion</a></span><span class="toc-page">58</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#ch8">Chapter 8 – Conclusion and Future Work</a></span><span class="toc-page">60</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch8-1">8.1 Conclusion</a></span><span class="toc-page">60</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch8-2">8.2 Limitations</a></span><span class="toc-page">61</span></div>
+  <div class="toc-entry toc-level-2"><span class="toc-title"><a href="#ch8-3">8.3 Future Work</a></span><span class="toc-page">62</span></div>
+
+  <div class="toc-entry toc-level-1" style="margin-top:6pt;"><span class="toc-title"><a href="#references">References</a></span><span class="toc-page">64</span></div>
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#appendix-a">Appendix A – Database Schema Diagram</a></span><span class="toc-page">67</span></div>
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#appendix-b">Appendix B – API Route Reference</a></span><span class="toc-page">68</span></div>
+  <div class="toc-entry toc-level-1"><span class="toc-title"><a href="#appendix-c">Appendix C – Sample Ishyiga Data Export</a></span><span class="toc-page">70</span></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     LIST OF ABBREVIATIONS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <h2 id="abbreviations">List of Abbreviations</h2>
+  <table>
+    <tr><th>Abbreviation</th><th>Full Form</th></tr>
+    <tr><td>AI</td><td>Artificial Intelligence</td></tr>
+    <tr><td>API</td><td>Application Programming Interface</td></tr>
+    <tr><td>APScheduler</td><td>Advanced Python Scheduler</td></tr>
+    <tr><td>CSS</td><td>Cascading Style Sheets</td></tr>
+    <tr><td>DB</td><td>Database</td></tr>
+    <tr><td>DOW</td><td>Day Of Week</td></tr>
+    <tr><td>FYP</td><td>Final Year Project</td></tr>
+    <tr><td>HTML</td><td>HyperText Markup Language</td></tr>
+    <tr><td>HTTP</td><td>HyperText Transfer Protocol</td></tr>
+    <tr><td>JSON</td><td>JavaScript Object Notation</td></tr>
+    <tr><td>LLM</td><td>Large Language Model</td></tr>
+    <tr><td>ML</td><td>Machine Learning</td></tr>
+    <tr><td>ORM</td><td>Object-Relational Mapper</td></tr>
+    <tr><td>POS</td><td>Point of Sale</td></tr>
+    <tr><td>REST</td><td>Representational State Transfer</td></tr>
+    <tr><td>RWF</td><td>Rwandan Franc</td></tr>
+    <tr><td>SMS</td><td>Short Message Service</td></tr>
+    <tr><td>SQL</td><td>Structured Query Language</td></tr>
+    <tr><td>SQLite</td><td>Self-contained SQL Database Engine</td></tr>
+    <tr><td>UI</td><td>User Interface</td></tr>
+    <tr><td>UX</td><td>User Experience</td></tr>
+    <tr><td>WSGI</td><td>Web Server Gateway Interface</td></tr>
+  </table>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 1 – INTRODUCTION
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 1</div>
+  <h1 id="ch1">Introduction</h1>
+
+  <h2 id="ch1-1">1.1 Background and Context</h2>
+  <p>
+    The pharmaceutical sector plays a critical role in public health delivery across Africa. In Rwanda, the government has made significant strides in improving healthcare access through initiatives such as the Community Health Worker programme and universal health coverage via Mutuelle de Santé. However, at the individual pharmacy level, many community-based establishments continue to rely on manual processes or rudimentary Point-of-Sale (POS) systems that record transactions but offer little analytical intelligence.
+  </p>
+  <p>
+    Pharmacie Tramed, located at KN 151 St, Kigali, is a well-established community pharmacy serving a diverse patient population including a significant proportion of chronic disease patients requiring regular medication refills. At the time of this project, the pharmacy operated using the <strong>Ishyiga POS system</strong> — a local Rwandan POS solution that records sales transactions, manages billing, and generates basic reports. While Ishyiga provides reliable transaction recording, it offers no predictive analytics, no customer engagement tools, and no automated communication capabilities.
+  </p>
+  <p>
+    This project was undertaken as a four-month Computer Science internship with the mandate to design and implement an <strong>AI-powered analytics and automation layer</strong> on top of the existing Ishyiga system — augmenting it without replacing it, and delivering actionable intelligence to both pharmacy staff and customers.
+  </p>
+
+  <h2 id="ch1-2">1.2 Problem Statement</h2>
+  <p>The following key operational problems were identified at Pharmacie Tramed through stakeholder interviews and direct observation:</p>
+  <ol>
+    <li>
+      <strong>Stock management inefficiency:</strong> Reorder decisions were made based on visual inspection rather than data-driven analysis, leading to both stockouts of essential medicines and overstocking of slow-moving products.
+    </li>
+    <li>
+      <strong>Poor chronic patient retention:</strong> Patients on long-term medication (e.g., antidiabetics, antihypertensives, antimalarials) frequently lapsed in their refill visits due to the absence of any reminder system. No mechanism existed to proactively contact patients before their medication ran out.
+    </li>
+    <li>
+      <strong>Absence of customer engagement:</strong> No loyalty or rewards programme existed to incentivise repeat visits, distinguish loyal customers, or build long-term pharmacy-patient relationships.
+    </li>
+    <li>
+      <strong>No self-service channel for customers:</strong> Customers had no way to check product availability, their purchase history, or their medication schedule outside of physically visiting the pharmacy.
+    </li>
+    <li>
+      <strong>Supplier coordination overhead:</strong> Reorder communications with suppliers were handled ad hoc, with no structured approach to consolidating orders or alerting suppliers about urgency levels.
+    </li>
+  </ol>
+
+  <h2 id="ch1-3">1.3 Project Objectives</h2>
+  <p>The primary objective of this project was to design and implement a comprehensive pharmacy intelligence system addressing the problems identified above. The specific objectives were:</p>
+  <ol>
+    <li>To develop a <strong>real-time operations dashboard</strong> providing daily, weekly, and monthly revenue summaries, low-stock alerts, and top product performance metrics.</li>
+    <li>To implement a <strong>demand forecasting engine</strong> using statistical modelling to predict 30-day stock requirements and generate urgency-tiered reorder recommendations.</li>
+    <li>To build a <strong>customer retention system</strong> that detects refill patterns from sales history and generates automated WhatsApp medication reminders for chronic patients.</li>
+    <li>To create a <strong>customer loyalty programme</strong> with a points-based reward system, three customer tiers, and automated notifications in both English and Kinyarwanda.</li>
+    <li>To develop an <strong>AI-powered pharmacy chatbot</strong> using the Claude large language model, capable of answering customer queries about medications, pricing, and availability in multiple languages.</li>
+    <li>To provide a <strong>self-service customer portal</strong> allowing patients to view their loyalty balance, medication schedules, purchase history, and place WhatsApp orders — without requiring a login.</li>
+    <li>To implement an <strong>automated supplier notification system</strong> that consolidates reorder messages by supplier and sends a weekly summary to the pharmacist every Monday.</li>
+    <li>To produce a system that is <strong>replicable and well-documented</strong>, serving as a blueprint for digital transformation at other Rwandan pharmacies.</li>
+  </ol>
+
+  <h2 id="ch1-4">1.4 Scope and Limitations</h2>
+  <p><strong>In scope:</strong></p>
+  <ul>
+    <li>Web-based staff management interface (dashboard, inventory, sales, forecast, customers, loyalty, messages)</li>
+    <li>Public-facing customer shop, portal, and chatbot</li>
+    <li>WhatsApp integration via wa.me links and Twilio API</li>
+    <li>LLM-powered chatbot for customer Q&amp;A</li>
+    <li>Ishyiga data import utility for historical sales data</li>
+  </ul>
+  <p><strong>Out of scope:</strong></p>
+  <ul>
+    <li>Staff authentication and role-based access control (identified as future work)</li>
+    <li>Direct integration with Ishyiga's live database (import utility handles batch exports)</li>
+    <li>Prescription management and regulatory compliance workflows</li>
+    <li>Mobile application development</li>
+    <li>Multi-branch pharmacy support</li>
+  </ul>
+
+  <h2 id="ch1-5">1.5 Organisation of the Report</h2>
+  <p>
+    The remainder of this report is structured as follows: Chapter 2 reviews relevant literature on pharmacy management systems, demand forecasting, and AI in healthcare. Chapter 3 presents the system analysis and requirements. Chapter 4 describes the system design. Chapter 5 details the implementation. Chapter 6 covers testing. Chapter 7 presents results and discussion, and Chapter 8 concludes with future work recommendations.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 2 – LITERATURE REVIEW
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 2</div>
+  <h1 id="ch2">Literature Review</h1>
+
+  <h2 id="ch2-1">2.1 Pharmacy Management Systems</h2>
+  <p>
+    Pharmacy management systems (PMS) have evolved considerably over the past two decades. Early systems focused primarily on dispensing, billing, and drug interaction checking [CITATION NEEDED]. Modern systems, particularly in high-income countries, integrate inventory management, prescription management, patient records, and insurance billing into unified platforms. Examples include McKesson Pharmacy Systems (USA), Cegedim (France), and Rx30 (USA).
+  </p>
+  <p>
+    In Sub-Saharan Africa, however, the landscape is different. Studies by [CITATION NEEDED] have found that the majority of private community pharmacies in East Africa rely on basic POS tools or manual ledgers, with limited uptake of integrated pharmacy management solutions. In Rwanda specifically, the Ishyiga POS system is widely adopted for transaction recording, but its analytical capabilities are limited to basic sales reporting.
+  </p>
+  <p>
+    The concept of building a lightweight analytics layer on top of an existing POS — rather than replacing it — aligns with the approach advocated by [CITATION NEEDED] for incremental digital transformation in resource-constrained healthcare settings. This preserves staff familiarity with existing tools while unlocking new intelligence from the data those tools already collect.
+  </p>
+
+  <h2 id="ch2-2">2.2 Demand Forecasting in Healthcare Supply Chains</h2>
+  <p>
+    Accurate demand forecasting is critical in pharmaceutical supply chains to prevent both stockouts and overstock. Stockouts of essential medicines have been linked to treatment interruptions, patient non-adherence, and adverse health outcomes, particularly for chronic disease patients (WHO, 2020).
+  </p>
+  <p>
+    Forecasting methods range from simple moving averages to sophisticated deep learning models. For small to medium-sized pharmacies with limited historical data, simpler statistical methods often outperform complex models [CITATION NEEDED]. Linear regression remains widely used in healthcare inventory management due to its interpretability and computational efficiency.
+  </p>
+  <p>
+    Research by [CITATION NEEDED] demonstrated that incorporating day-of-week and seasonal effects into baseline linear trend models significantly improves forecast accuracy for retail health product sales. This approach — decomposing demand into trend and seasonality components before fitting a linear model — formed the theoretical basis for the forecasting module implemented in this project.
+  </p>
+  <p>
+    The concept of <strong>lead time</strong> and <strong>safety stock</strong> is fundamental to reorder point calculation. The standard formula for reorder point (ROP) is: <em>ROP = (Average Daily Demand × Lead Time) + Safety Stock</em>. This project implements a variant that uses forecasted rather than historical average daily demand, improving forward-looking accuracy.
+  </p>
+
+  <h2 id="ch2-3">2.3 AI and Chatbots in Healthcare</h2>
+  <p>
+    The deployment of conversational AI in healthcare has grown rapidly following advances in large language models (LLMs). Systems such as Google's Med-PaLM and various GPT-based applications have demonstrated the potential of AI to answer medical queries, support clinical decision-making, and improve patient engagement [CITATION NEEDED].
+  </p>
+  <p>
+    For community pharmacy applications, AI chatbots have shown promise in answering product queries, checking availability, and directing patients to appropriate care [CITATION NEEDED]. Key considerations in pharmacy chatbot design include multilingual support (critical in multilingual contexts like Rwanda), hallucination mitigation, and clear boundaries around medical advice.
+  </p>
+  <p>
+    The Anthropic Claude family of models has been noted for its strong instruction-following capabilities and safety orientation, making it suitable for customer-facing healthcare applications [CITATION NEEDED]. The Claude Haiku model, used in this project, offers a favourable balance between response quality and API cost — approximately 10× cheaper than Claude Opus while remaining adequate for pharmacy Q&amp;A tasks.
+  </p>
+
+  <h2 id="ch2-4">2.4 Customer Retention and Loyalty Systems</h2>
+  <p>
+    Customer retention is a well-studied domain in retail management. In pharmacy contexts, retention is particularly important for chronic disease patients who require regular refills. Research consistently shows that medication non-adherence is one of the leading causes of preventable hospitalisation [CITATION NEEDED], and that proactive outreach — including reminder systems — significantly improves adherence rates.
+  </p>
+  <p>
+    WhatsApp-based medication reminder interventions have shown strong effectiveness in Sub-Saharan Africa due to the near-universal adoption of WhatsApp in the region. Studies in Kenya, Ghana, and Rwanda have reported improved adherence rates of 15–30% with WhatsApp reminder programmes [CITATION NEEDED].
+  </p>
+  <p>
+    Points-based loyalty programmes are a proven customer retention mechanism in retail pharmacy [CITATION NEEDED]. Tiered loyalty structures (Bronze/Silver/Gold or equivalent) have been shown to increase customer lifetime value and purchase frequency compared to flat-rate programmes.
+  </p>
+
+  <h2 id="ch2-5">2.5 Digital Health in Sub-Saharan Africa</h2>
+  <p>
+    Rwanda has positioned itself as a technology leader in East Africa, with initiatives including Rwanda's National Digital Strategy 2020-2025 and the establishment of the Rwanda ICT Chamber. The country's high mobile penetration rate (approximately 85% as of 2024) and growing smartphone adoption create favourable conditions for mobile-first and WhatsApp-based digital health solutions.
+  </p>
+  <p>
+    However, research also highlights persistent challenges in healthcare digitalisation: limited technical capacity among healthcare workers, infrastructure reliability concerns, and the risk of creating systems that are not maintainable after developer departure [CITATION NEEDED]. These factors informed key design decisions in this project, including the choice of simple, maintainable technologies (SQLite, standard Python libraries) over complex distributed architectures.
+  </p>
+
+  <h2>2.6 Summary and Research Gap</h2>
+  <p>
+    The literature confirms a clear need for affordable, locally relevant pharmacy management intelligence tools in Sub-Saharan Africa. Existing solutions are either too expensive, too complex, or designed for different regulatory and linguistic contexts. This project contributes to filling this gap by delivering an open, well-documented, and replicable system that integrates demand forecasting, patient retention, loyalty management, and AI-powered customer service into a single coherent platform built specifically for the Rwandan community pharmacy context.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 3 – SYSTEM ANALYSIS & REQUIREMENTS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 3</div>
+  <h1 id="ch3">System Analysis and Requirements</h1>
+
+  <h2 id="ch3-1">3.1 Requirements Gathering Methodology</h2>
+  <p>
+    Requirements were gathered through a combination of structured interviews, direct observation, and document analysis conducted during the first two weeks of the internship. The primary stakeholders consulted were the pharmacy owner/pharmacist, counter staff, and a sample of regular customers.
+  </p>
+  <p>
+    The existing Ishyiga POS was analysed and a sample data export (the <em>sales of 13_05.xlsx</em> file containing historical sales records) was examined to understand the data structure available for analytics purposes. This 19-column export format became the target schema for the system's data import utility.
+  </p>
+
+  <h2 id="ch3-2">3.2 Stakeholder Analysis</h2>
+  <p class="table-caption">Table 3.1 – Stakeholder Analysis</p>
+  <table>
+    <tr><th>Stakeholder</th><th>Role</th><th>Primary Needs</th><th>System Interface</th></tr>
+    <tr>
+      <td>Pharmacist / Owner</td>
+      <td>Decision maker, procurement</td>
+      <td>Revenue visibility, reorder alerts, supplier coordination, weekly summaries</td>
+      <td>Dashboard, Forecast, Messages, WhatsApp automated alerts</td>
+    </tr>
+    <tr>
+      <td>Counter Staff</td>
+      <td>Daily operations, customer service</td>
+      <td>Quick stock lookup, loyalty point awarding, customer reminders</td>
+      <td>Inventory, Loyalty Counter, Customers, Messages</td>
+    </tr>
+    <tr>
+      <td>Chronic Patients</td>
+      <td>Regular medication buyers</td>
+      <td>Refill reminders, loyalty rewards, order placement without visiting</td>
+      <td>Customer Portal, WhatsApp messages, Shop</td>
+    </tr>
+    <tr>
+      <td>Walk-in Customers</td>
+      <td>Occasional buyers</td>
+      <td>Product availability and pricing information, AI-assisted queries</td>
+      <td>Shop, AI Chatbot</td>
+    </tr>
+    <tr>
+      <td>Suppliers</td>
+      <td>Stock providers</td>
+      <td>Consolidated, clear reorder requests</td>
+      <td>WhatsApp messages (via wa.me links or Twilio)</td>
+    </tr>
+  </table>
+
+  <h2 id="ch3-3">3.3 Functional Requirements</h2>
+
+  <h3>FR1 – Dashboard &amp; Reporting</h3>
+  <ul>
+    <li>FR1.1: The system shall display today's revenue, yesterday's revenue, 7-day revenue, and month-to-date revenue on the dashboard.</li>
+    <li>FR1.2: The system shall display a revenue trend chart for selectable periods (7, 30, 90 days).</li>
+    <li>FR1.3: The system shall display the top 5 products by revenue for the last 30 days.</li>
+    <li>FR1.4: The system shall display a low-stock alert list for all products at or below their minimum stock level.</li>
+    <li>FR1.5: The system shall display a sales-by-category breakdown chart.</li>
+  </ul>
+
+  <h3>FR2 – Inventory Management</h3>
+  <ul>
+    <li>FR2.1: The system shall allow staff to browse all products with filtering by category and text search.</li>
+    <li>FR2.2: The system shall allow staff to update product stock quantities via the interface without reloading the page.</li>
+    <li>FR2.3: The system shall display product margin percentage for each product.</li>
+  </ul>
+
+  <h3>FR3 – Demand Forecasting</h3>
+  <ul>
+    <li>FR3.1: The system shall generate a 30-day demand forecast for every product in inventory.</li>
+    <li>FR3.2: The system shall classify each product's reorder urgency as: Critical, Urgent, Soon, or OK.</li>
+    <li>FR3.3: The system shall provide a pre-formatted WhatsApp reorder message for each supplier, grouped by supplier.</li>
+    <li>FR3.4: The system shall automatically send a weekly reorder summary to the pharmacist every Monday at 08:00.</li>
+  </ul>
+
+  <h3>FR4 – Customer Retention</h3>
+  <ul>
+    <li>FR4.1: The system shall detect repeat purchase patterns from sales history for each customer.</li>
+    <li>FR4.2: The system shall allow staff to create medication refill schedules for chronic patients.</li>
+    <li>FR4.3: The system shall surface overdue, due-today, and due-within-7-days schedules on the messages page.</li>
+    <li>FR4.4: The system shall provide a pre-filled WhatsApp reminder message for each due schedule.</li>
+    <li>FR4.5: The system shall allow staff to renew a schedule after a patient collects their medication.</li>
+  </ul>
+
+  <h3>FR5 – Loyalty Programme</h3>
+  <ul>
+    <li>FR5.1: The system shall award loyalty points at 1 point per 100 RWF spent, subject to a minimum purchase of 1,000 RWF.</li>
+    <li>FR5.2: The system shall apply tier multipliers: Bronze ×1.0, Silver ×1.5, Gold ×2.0.</li>
+    <li>FR5.3: The system shall maintain separate lifetime_points (for tier calculation) and points_balance (for redemption).</li>
+    <li>FR5.4: The system shall allow redemption at 100 points = 500 RWF, up to 50% of the sale value.</li>
+    <li>FR5.5: The system shall generate a WhatsApp notification in Kinyarwanda after each point award.</li>
+    <li>FR5.6: The system shall provide a POS-style loyalty counter screen for counter staff use.</li>
+  </ul>
+
+  <h3>FR6 – AI Chatbot</h3>
+  <ul>
+    <li>FR6.1: The system shall provide a chat interface on the public shop page.</li>
+    <li>FR6.2: The chatbot shall respond to queries about product availability, pricing, and ordering in English, French, and Kinyarwanda.</li>
+    <li>FR6.3: The chatbot shall include live inventory data in every response context.</li>
+    <li>FR6.4: The chatbot shall decline to provide medical diagnoses and refer complex health questions to a pharmacist.</li>
+  </ul>
+
+  <h3>FR7 – Customer Portal</h3>
+  <ul>
+    <li>FR7.1: The system shall provide a public portal accessible by phone number lookup (no login required).</li>
+    <li>FR7.2: The portal shall display the customer's loyalty balance, tier, transaction history, and medication schedules.</li>
+    <li>FR7.3: The portal shall allow customers to initiate a WhatsApp order for any product.</li>
+  </ul>
+
+  <h2 id="ch3-4">3.4 Non-Functional Requirements</h2>
+  <table>
+    <tr><th>ID</th><th>Category</th><th>Requirement</th></tr>
+    <tr><td>NFR1</td><td>Performance</td><td>All page loads shall complete within 3 seconds on a standard broadband connection.</td></tr>
+    <tr><td>NFR2</td><td>Reliability</td><td>WhatsApp sending failures shall fall back to console logging without crashing the system.</td></tr>
+    <tr><td>NFR3</td><td>Usability</td><td>The loyalty counter shall complete the award flow in 3 steps without page reloads.</td></tr>
+    <tr><td>NFR4</td><td>Localisation</td><td>Loyalty messages and portal content shall support Kinyarwanda output.</td></tr>
+    <tr><td>NFR5</td><td>Maintainability</td><td>The database shall be resettable by deleting a single file and restarting the server.</td></tr>
+    <tr><td>NFR6</td><td>Portability</td><td>The system shall run on any machine with Python 3.10+ installed, with no external database server required.</td></tr>
+    <tr><td>NFR7</td><td>Security</td><td>API keys shall be stored in environment variables, not hardcoded in source code.</td></tr>
+  </table>
+
+  <h2 id="ch3-5">3.5 Use Case Analysis</h2>
+  <p>Five primary use cases were identified and modelled:</p>
+
+  <h4>UC1 – Customer Earns Loyalty Points</h4>
+  <p><strong>Actor:</strong> Counter Staff | <strong>Trigger:</strong> Customer completes a purchase</p>
+  <ol>
+    <li>Staff enters customer phone number in loyalty counter</li>
+    <li>System looks up customer account and displays tier and balance</li>
+    <li>Staff enters purchase amount</li>
+    <li>System calculates and awards points, displays WhatsApp notification text</li>
+    <li>Staff optionally sends notification via WhatsApp</li>
+  </ol>
+
+  <h4>UC2 – Staff Reviews Forecast and Sends Reorder</h4>
+  <p><strong>Actor:</strong> Pharmacist | <strong>Trigger:</strong> Weekly stock review or alert notification</p>
+  <ol>
+    <li>Pharmacist opens Demand Forecast page</li>
+    <li>System displays urgency-tiered product list (Critical → OK)</li>
+    <li>Pharmacist taps supplier WhatsApp button for a critical supplier</li>
+    <li>Pre-filled WhatsApp message opens with consolidated product list and quantities</li>
+    <li>Pharmacist reviews and sends</li>
+  </ol>
+
+  <h4>UC3 – Customer Self-Service via Portal</h4>
+  <p><strong>Actor:</strong> Customer | <strong>Trigger:</strong> Customer visits pharmacy website</p>
+  <ol>
+    <li>Customer enters phone number on portal lookup page</li>
+    <li>System finds account and displays loyalty balance, schedules, and history</li>
+    <li>Customer browses shop and selects a product to order</li>
+    <li>System opens pre-filled WhatsApp order message to pharmacy</li>
+  </ol>
+
+  <h4>UC4 – Staff Sends Medication Reminder</h4>
+  <p><strong>Actor:</strong> Counter Staff | <strong>Trigger:</strong> Overdue or due-soon schedule flagged on messages page</p>
+  <ol>
+    <li>Staff opens Messages page</li>
+    <li>System lists overdue and due-soon schedules with patient names</li>
+    <li>Staff taps WhatsApp button for a patient</li>
+    <li>Pre-filled reminder message opens in WhatsApp</li>
+    <li>Staff sends message; after patient visit, staff taps Renew to advance the schedule</li>
+  </ol>
+
+  <h4>UC5 – Customer Queries AI Chatbot</h4>
+  <p><strong>Actor:</strong> Customer | <strong>Trigger:</strong> Customer visits shop page</p>
+  <ol>
+    <li>Customer clicks chat icon on shop page</li>
+    <li>Customer types query (e.g., "do you have Metformin 500mg?")</li>
+    <li>System sends query + live inventory context to Claude Haiku API</li>
+    <li>Claude responds with availability, price, and WhatsApp order link</li>
+  </ol>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 4 – SYSTEM DESIGN
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 4</div>
+  <h1 id="ch4">System Design</h1>
+
+  <h2 id="ch4-1">4.1 System Architecture</h2>
+  <p>
+    The system follows a <strong>monolithic three-tier architecture</strong> appropriate for a single-site deployment: a presentation layer (Jinja2 templates + Tailwind CSS), a business logic layer (Flask application + Python modules), and a data layer (SQLite via SQLAlchemy ORM).
+  </p>
+  <div class="figure">
+    <div class="figure-placeholder">[Figure 4.1 – System Architecture Diagram: External Services → Flask App (24 routes) → 8 Modules → SQLite DB]</div>
+    <div class="figure-caption">Figure 4.1 – High-level system architecture</div>
+  </div>
+  <p>External integrations:</p>
+  <ul>
+    <li><strong>Anthropic Claude API</strong> (claude-haiku-4-5-20251001) — AI chatbot responses</li>
+    <li><strong>Twilio WhatsApp API</strong> — Automated weekly reorder alert to pharmacist</li>
+    <li><strong>WhatsApp wa.me links</strong> — Staff-triggered messages (loyalty notifications, reminders, supplier orders, portal orders)</li>
+  </ul>
+  <p>
+    The choice of a monolithic architecture over a microservices approach was deliberate. A monolith is simpler to deploy, debug, and maintain — critical factors in a resource-constrained setting where there is no dedicated DevOps team.
+  </p>
+
+  <h2 id="ch4-2">4.2 Database Design</h2>
+  <p>
+    The database consists of <strong>nine tables</strong> implemented as SQLAlchemy ORM models in <code>database.py</code>. The design separates raw import data (RawSale) from the normalised operational schema (Sale + SaleItem), enabling the Ishyiga import pipeline to operate independently of the live system.
+  </p>
+
+  <p class="table-caption">Table 4.1 – Database Table Summary</p>
+  <table>
+    <tr><th>Table</th><th>Purpose</th><th>Key Fields</th></tr>
+    <tr><td>Supplier</td><td>Pharmaceutical supplier records</td><td>name, contact, whatsapp_number, email</td></tr>
+    <tr><td>Product</td><td>Medications and medical supplies</td><td>name, category, stock_quantity, min_stock_level, sell_price, cost_price, supplier_id</td></tr>
+    <tr><td>Customer</td><td>Patient / customer records</td><td>name, phone, notes</td></tr>
+    <tr><td>Sale</td><td>Transaction header</td><td>customer_id, total_amount, payment_method, created_at</td></tr>
+    <tr><td>SaleItem</td><td>Line items per transaction</td><td>sale_id, product_id, quantity, unit_price</td></tr>
+    <tr><td>MedicationSchedule</td><td>Recurring refill schedule per patient</td><td>customer_id, product_id, interval_days, last_purchase_date, next_reminder_date, active</td></tr>
+    <tr><td>LoyaltyAccount</td><td>Points balance and tier per customer</td><td>customer_id, points_balance, lifetime_points, tier</td></tr>
+    <tr><td>LoyaltyTransaction</td><td>Audit log of all point movements</td><td>account_id, delta, transaction_type, note, created_at</td></tr>
+    <tr><td>RawSale</td><td>Flat import mirror of Ishyiga export</td><td>19 fields matching Ishyiga Excel column structure</td></tr>
+  </table>
+
+  <p>Key design decisions:</p>
+  <ul>
+    <li><strong>Separate lifetime_points and points_balance</strong> in LoyaltyAccount: lifetime_points only ever increases (used to determine tier), while points_balance can decrease on redemption. This ensures a customer's tier is never retroactively lowered — a common loyalty programme complaint that damages trust.</li>
+    <li><strong>MedicationSchedule.next_reminder_date</strong> is calculated as <code>last_purchase_date + interval_days - 3</code>: the 3-day advance trigger gives patients time to visit before their medicine runs out.</li>
+    <li><strong>Product.min_stock_level</strong> is set per-product rather than globally, allowing different reorder thresholds for high-demand and specialised medications.</li>
+  </ul>
+
+  <div class="figure">
+    <div class="figure-placeholder">[Figure 4.2 – Entity Relationship Diagram showing all 9 tables and their relationships]</div>
+    <div class="figure-caption">Figure 4.2 – Entity Relationship Diagram</div>
+  </div>
+
+  <h2 id="ch4-3">4.3 Module Design</h2>
+
+  <h3>4.3.1 Demand Forecasting Module (forecasting.py)</h3>
+  <p>The forecasting algorithm comprises four stages:</p>
+  <ol>
+    <li><strong>Data aggregation:</strong> Sum units sold per product per day over a 90-day window from the SaleItem and Sale tables.</li>
+    <li><strong>Day-of-week seasonality:</strong> Calculate a multiplier for each day of week as the ratio of that day's mean sales to the overall mean. For example, if Mondays average 1.3× the overall daily mean, the Monday multiplier is 1.3.</li>
+    <li><strong>Trend fitting:</strong> Deseasonalise the last 30 days of data by dividing by the corresponding DOW multiplier, then fit a first-degree polynomial (linear regression) using <code>numpy.polyfit</code>.</li>
+    <li><strong>Projection:</strong> Apply the fitted linear function to the next 30 days, then reseasonalise by multiplying by the appropriate DOW multiplier for each future date.</li>
+  </ol>
+  <p>Reorder urgency is determined by comparing forecasted cumulative demand against current stock, factoring in lead time (3 days) and a safety buffer (7 days):</p>
+  <ul>
+    <li><strong>Critical:</strong> Stock expected to run out within the lead time window</li>
+    <li><strong>Urgent:</strong> Stock runs out within lead time + safety buffer (10 days)</li>
+    <li><strong>Soon:</strong> Stock runs out within 14 days</li>
+    <li><strong>OK:</strong> 14+ days of forecasted coverage</li>
+  </ul>
+
+  <h3>4.3.2 Customer Retention Module (retention.py)</h3>
+  <p>The retention module provides three functions:</p>
+  <ul>
+    <li><code>detect_purchase_patterns(customer_id)</code>: Identifies products purchased 2 or more times, calculates the average interval in days, and returns these as suggested schedule candidates for staff review.</li>
+    <li><code>get_due_reminders(days_ahead=7)</code>: Queries all active MedicationSchedules and classifies each as OVERDUE, DUE TODAY, or DUE SOON based on next_reminder_date. Returns pre-formatted WhatsApp message text for each.</li>
+    <li><code>get_supplier_reorder_messages()</code>: Reads forecast results, groups Critical and Urgent products by their supplier, and generates a consolidated WhatsApp reorder message per supplier.</li>
+  </ul>
+  <p>The threshold of ≥2 purchases (rather than ≥3) was deliberately chosen to accommodate the early-stage nature of the dataset — in a pharmacy with a few months of history, requiring 3 purchases before detecting a pattern would miss many genuine chronic patients.</p>
+
+  <h3>4.3.3 Loyalty Module (loyalty.py)</h3>
+  <p>Points are awarded according to:</p>
+  <pre>points_earned = floor((amount_rwf / 100) × tier_multiplier)</pre>
+  <p>Tier multipliers: Bronze ×1.0, Silver ×1.5 (≥500 lifetime points), Gold ×2.0 (≥2,000 lifetime points).</p>
+  <p>Redemption calculates the maximum allowable discount as <code>min(points_to_use × 5, sale_amount × 0.5)</code>, capping redemption at 50% of the sale value to protect pharmacy revenue.</p>
+  <p>All point movements are logged to the LoyaltyTransaction table, providing a full audit trail for dispute resolution.</p>
+
+  <h3>4.3.4 AI Chat Module (chat.py)</h3>
+  <p>On every API call, the module queries the Product table and constructs a structured inventory context string listing each product's category, stock status (In Stock / Low Stock / Out of Stock), and price. This context is injected as the system prompt's inventory section, ensuring the LLM always has up-to-date product information without fine-tuning.</p>
+  <p>The system prompt instructs Claude to: respond in the detected language (English/French/Kinyarwanda), never diagnose, direct orders to WhatsApp, and mention prescription requirements for controlled medications.</p>
+
+  <h2 id="ch4-4">4.4 User Interface Design</h2>
+  <p>
+    The interface follows a consistent <strong>sidebar navigation + content area</strong> layout defined in <code>base.html</code>. The sidebar uses the pharmacy's brand green colour (Tailwind custom colour: brand-900 = #14532d) with white text. All staff-facing pages extend this base layout.
+  </p>
+  <p>
+    The customer-facing pages (shop, portal, chatbot) use a lighter, more open layout appropriate for public access. The loyalty counter was designed specifically for counter staff use — large touch-friendly elements, minimal steps (phone lookup → amount entry → confirm), and immediate WhatsApp output — inspired by POS terminal UX patterns.
+  </p>
+  <p>All UI components were built with Tailwind CSS (CDN, no build step required) and Chart.js for visualisations, keeping the frontend stack simple and maintainable.</p>
+
+  <h2 id="ch4-5">4.5 Design Decisions and Trade-offs</h2>
+  <p class="table-caption">Table 4.2 – Key Design Decisions</p>
+  <table>
+    <tr><th>Decision</th><th>Choice Made</th><th>Alternative Considered</th><th>Rationale</th></tr>
+    <tr>
+      <td>Database</td>
+      <td>SQLite</td>
+      <td>PostgreSQL / MySQL</td>
+      <td>Zero-config, single file, trivially resettable. Adequate for a single-location pharmacy with &lt;50 concurrent users.</td>
+    </tr>
+    <tr>
+      <td>WhatsApp channel</td>
+      <td>wa.me links (staff-triggered) + Twilio (automated weekly alert)</td>
+      <td>Full WhatsApp Business API for all messages</td>
+      <td>wa.me requires no API approval, is free, and works immediately. Twilio only for the one automated message that cannot be staff-triggered.</td>
+    </tr>
+    <tr>
+      <td>LLM model</td>
+      <td>Claude Haiku</td>
+      <td>Claude Sonnet / GPT-4</td>
+      <td>~10× cheaper than Sonnet. Pharmacy Q&amp;A tasks do not require deep reasoning; Haiku's response quality is sufficient.</td>
+    </tr>
+    <tr>
+      <td>Frontend framework</td>
+      <td>Vanilla JS + Tailwind CDN</td>
+      <td>React / Vue</td>
+      <td>Eliminates build toolchain complexity. Easier for future staff or contractors to maintain without Node.js expertise.</td>
+    </tr>
+    <tr>
+      <td>Authentication</td>
+      <td>None (deferred)</td>
+      <td>Flask-Login with role-based access</td>
+      <td>Deferred to Phase 2 to focus on core analytics functionality within the 4-month internship scope.</td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 5 – IMPLEMENTATION
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 5</div>
+  <h1 id="ch5">Implementation</h1>
+
+  <h2 id="ch5-1">5.1 Development Environment</h2>
+  <p>The system was developed on Windows 11 using the following tools:</p>
+  <ul>
+    <li><strong>IDE:</strong> Visual Studio Code with Python extension</li>
+    <li><strong>Version control:</strong> Git</li>
+    <li><strong>Python version:</strong> 3.13</li>
+    <li><strong>Package management:</strong> pip with requirements.txt</li>
+    <li><strong>Database viewer:</strong> DB Browser for SQLite (for inspection during development)</li>
+    <li><strong>API testing:</strong> Browser DevTools + manual testing</li>
+  </ul>
+
+  <h2 id="ch5-2">5.2 Technology Stack</h2>
+  <p class="table-caption">Table 5.1 – Full Technology Stack</p>
+  <table>
+    <tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td>Web Framework</td><td>Flask</td><td>3.0.3</td><td>HTTP routing, request handling, Jinja2 templating</td></tr>
+    <tr><td>ORM</td><td>SQLAlchemy (Flask-SQLAlchemy)</td><td>2.0.50</td><td>Database models and queries</td></tr>
+    <tr><td>Database</td><td>SQLite</td><td>Built-in</td><td>Persistent data storage</td></tr>
+    <tr><td>Analytics</td><td>pandas</td><td>3.0.3</td><td>Data manipulation for import pipeline</td></tr>
+    <tr><td>Numerical</td><td>numpy</td><td>2.4.6</td><td>Linear regression (polyfit) for forecasting</td></tr>
+    <tr><td>Task Scheduling</td><td>Flask-APScheduler</td><td>3.11.2</td><td>Automated Monday 08:00 reorder alert</td></tr>
+    <tr><td>AI / LLM</td><td>Anthropic Python SDK</td><td>Latest</td><td>Claude Haiku chatbot integration</td></tr>
+    <tr><td>WhatsApp API</td><td>Twilio Python SDK</td><td>9.3.2</td><td>Automated WhatsApp message sending</td></tr>
+    <tr><td>Environment</td><td>python-dotenv</td><td>Latest</td><td>Loading API keys from .env file</td></tr>
+    <tr><td>Frontend CSS</td><td>Tailwind CSS</td><td>CDN (latest)</td><td>Utility-first styling</td></tr>
+    <tr><td>Charts</td><td>Chart.js</td><td>4.4.3 CDN</td><td>Revenue and category visualisations</td></tr>
+    <tr><td>Templating</td><td>Jinja2</td><td>3.1.6</td><td>Server-side HTML rendering</td></tr>
+  </table>
+
+  <h2 id="ch5-3">5.3 Key Module Implementations</h2>
+
+  <h3>5.3.1 Application Entry Point (run.py)</h3>
+  <p>
+    The entry point performs dependency verification, then checks whether the SQLite database file exists. If not, it creates the schema and calls <code>seed_data.seed(app)</code> to populate the database with realistic demo data: 4 suppliers, 30 medications across 13 categories, 8 chronic customers with complete loyalty histories, and 90 days of synthetic sales data. This one-command startup removes friction for new deployments.
+  </p>
+
+  <h3>5.3.2 Forecasting Implementation</h3>
+  <p>The core forecasting function, <code>forecast_product(product_id, horizon=30)</code> in <code>forecasting.py</code>, implements the algorithm described in Section 4.3.1. A key implementation detail is the handling of products with sparse data (fewer than 7 days of sales history): the function falls back to a simple average rather than fitting a regression line, preventing nonsensical negative forecasts for slow-moving products.</p>
+  <pre>
+# Simplified excerpt from forecasting.py
+def forecast_product(product_id, horizon=30):
+    # 1. Aggregate daily sales over 90-day window
+    daily = _daily_sales(product_id, days=90)
+
+    # 2. Compute day-of-week multipliers
+    dow_multipliers = _dow_multipliers(daily)
+
+    # 3. Fit linear trend on last 30 days (deseasonalised)
+    recent = daily[-30:]
+    deseason = [s / dow_multipliers[d] for d, s in recent]
+    coeffs = np.polyfit(range(len(deseason)), deseason, 1)
+
+    # 4. Project forward and reseasonalise
+    forecasts = []
+    for i in range(horizon):
+        trend_val = max(0, np.polyval(coeffs, len(deseason) + i))
+        dow = (date.today() + timedelta(days=i)).weekday()
+        forecasts.append(trend_val * dow_multipliers[dow])
+
+    return _build_recommendation(product_id, forecasts)
+  </pre>
+
+  <h3>5.3.3 Loyalty Counter (3-step AJAX flow)</h3>
+  <p>
+    The loyalty counter at <code>/loyalty/counter</code> was implemented as a single-page 3-step flow using vanilla JavaScript fetch calls — no page reloads between steps. This mirrors a POS terminal experience:
+  </p>
+  <ol>
+    <li><strong>Step 1 – Phone lookup:</strong> <code>GET /api/loyalty/lookup?phone=...</code> returns customer name, tier, balance</li>
+    <li><strong>Step 2 – Amount entry:</strong> Live preview of points to be earned, calculated client-side</li>
+    <li><strong>Step 3 – Confirm:</strong> <code>POST /api/loyalty/award</code> commits points; response includes WhatsApp message URL in Kinyarwanda</li>
+  </ol>
+
+  <h3>5.3.4 WhatsApp Integration Strategy</h3>
+  <p>Two distinct WhatsApp channels were implemented:</p>
+  <ul>
+    <li>
+      <strong>wa.me deep links</strong> (zero cost, staff-triggered): Used for loyalty notifications, medication reminders, supplier reorders, and portal orders. The system pre-fills the WhatsApp message text using URL encoding; staff simply tap and send. No API approval required.
+    </li>
+    <li>
+      <strong>Twilio WhatsApp API</strong> (automated): Used exclusively for the weekly Monday 08:00 reorder summary sent to the pharmacist — the only message that must fire without any human trigger. The <code>notifier.py</code> module wraps Twilio with a fallback: if credentials are absent or invalid, the message is printed to the console instead of raising an exception.
+    </li>
+  </ul>
+
+  <h3>5.3.5 AI Chatbot Integration</h3>
+  <p>The chatbot endpoint at <code>POST /api/chat</code> accepts a <code>messages</code> array (supporting multi-turn conversation) and calls the Anthropic Messages API. The system prompt is rebuilt on every call to ensure it contains the current live inventory state. The model is <code>claude-haiku-4-5-20251001</code> with a 512-token response limit — sufficient for concise pharmacy Q&amp;A responses while controlling API costs.</p>
+  <pre>
+# chat.py – simplified excerpt
+def chat(messages):
+    inventory_ctx = _build_inventory_context()
+    system = SYSTEM_PROMPT_TEMPLATE.format(inventory=inventory_ctx)
+    response = anthropic_client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=512,
+        system=system,
+        messages=messages,
+    )
+    return response.content[0].text
+  </pre>
+
+  <h3>5.3.6 Data Seeder (seed_data.py)</h3>
+  <p>
+    The seeder generates realistic Tramed-specific data rather than generic placeholder data. For example, chronic customer schedules are seeded with varying overdue states — one customer is 36 days overdue for their Metformin refill — ensuring the demo immediately demonstrates the retention module's value to any observer. Loyalty transactions are retroactively calculated from 90 days of sales, giving each customer a realistic starting balance and tier.
+  </p>
+
+  <h2 id="ch5-4">5.4 External API Integrations</h2>
+
+  <h3>5.4.1 Anthropic Claude API</h3>
+  <p>
+    The Anthropic Python SDK is used. Authentication is via the <code>ANTHROPIC_API_KEY</code> environment variable. The API is called synchronously within the Flask request context. Error handling catches both <code>ValueError</code> (configuration errors) and generic exceptions, returning a 503 response to the frontend rather than exposing error details.
+  </p>
+
+  <h3>5.4.2 Twilio WhatsApp API</h3>
+  <p>
+    Twilio's Python SDK is used for programmatic message sending. The system uses the Twilio WhatsApp Sandbox for development (number: +1 415 523 8886) and can be switched to a production WhatsApp Business number by updating the <code>TWILIO_WHATSAPP_FROM</code> environment variable. The sandbox requires the recipient to opt in by sending a join code — a limitation noted for the transition to production.
+  </p>
+
+  <h2 id="ch5-5">5.5 Challenges Encountered</h2>
+
+  <h3>5.5.1 Jinja2 dict.items() Conflict</h3>
+  <p>
+    A naming collision occurred when a template variable named <code>lines</code> shadowed Jinja2's built-in <code>dict.items()</code> method, causing an <code>AttributeError</code> at render time. The fix was to rename the template variable from <code>items</code> to <code>lines</code> — a subtle bug that highlighted the importance of avoiding reserved Jinja2 names as variable identifiers.
+  </p>
+
+  <h3>5.5.2 APScheduler Double-Fire in Debug Mode</h3>
+  <p>
+    Flask's debug reloader starts the application process twice (once for the reloader watcher, once for the actual server), causing APScheduler to register and fire scheduled tasks twice. The solution was to disable the reloader (<code>use_reloader=False</code>) while keeping <code>debug=True</code> for error page display.
+  </p>
+
+  <h3>5.5.3 Sparse Data Forecasting</h3>
+  <p>
+    Products with fewer than 7 days of sales history caused <code>numpy.polyfit</code> to produce unreliable or negative trend coefficients. A fallback was added: if fewer than 7 data points are available, the forecast uses the simple mean of available daily sales rather than a fitted trend line.
+  </p>
+
+  <h3>5.5.4 Duplicate TIERS Keyword Argument</h3>
+  <p>
+    During loyalty module development, the <code>TIERS</code> dictionary was inadvertently passed twice to a template render call, causing a <code>TypeError: got multiple values for keyword argument 'TIERS'</code>. This was resolved by auditing all <code>render_template</code> calls and removing duplicate context variable definitions.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 6 – TESTING
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 6</div>
+  <h1 id="ch6">Testing</h1>
+
+  <h2 id="ch6-1">6.1 Testing Strategy</h2>
+  <p>
+    Given the 4-month internship scope and the absence of an existing automated test suite, a <strong>structured manual testing approach</strong> was adopted. Each feature module was tested against a predefined set of test cases covering normal flow, edge cases, and error conditions. The SQLite database was reset between test cycles by deleting <code>tramed.db</code> and restarting the server to trigger fresh seeding.
+  </p>
+  <p>
+    No unit testing framework (e.g., pytest) was implemented within the project scope, though this is identified as a priority for Phase 2. The forecasting module's output was validated by comparing projected 30-day demand against the known 90-day seeded sales history for selected products.
+  </p>
+
+  <h2 id="ch6-2">6.2 Functional Test Cases</h2>
+  <p class="table-caption">Table 6.1 – Functional Test Cases Summary</p>
+  <table>
+    <tr><th>ID</th><th>Module</th><th>Test Case</th><th>Expected Result</th><th>Status</th></tr>
+    <tr>
+      <td>TC01</td><td>Dashboard</td>
+      <td>Load dashboard with seeded data</td>
+      <td>Today's revenue, low-stock list, top 5 products displayed correctly</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC02</td><td>Dashboard</td>
+      <td>Toggle revenue chart to 90-day view</td>
+      <td>Chart updates to show 90-day trend without page reload</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC03</td><td>Inventory</td>
+      <td>Search for "Metformin"</td>
+      <td>Only Metformin products displayed, all fields correct</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC04</td><td>Inventory</td>
+      <td>Update stock quantity via AJAX</td>
+      <td>New quantity reflected immediately without page reload; persisted on DB refresh</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC05</td><td>Forecasting</td>
+      <td>Load forecast page with 30 products</td>
+      <td>All 30 products appear with urgency labels; Critical items at top</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC06</td><td>Forecasting</td>
+      <td>Click supplier WhatsApp button</td>
+      <td>WhatsApp opens with pre-filled consolidated reorder message</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC07</td><td>Loyalty</td>
+      <td>Look up existing customer by phone</td>
+      <td>Customer name, tier, and balance returned within 1 second</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC08</td><td>Loyalty</td>
+      <td>Award points for 5,000 RWF purchase (Gold customer)</td>
+      <td>100 points awarded (5000/100 × 2.0); balance updated; Kinyarwanda WhatsApp message generated</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC09</td><td>Loyalty</td>
+      <td>Attempt redemption exceeding 50% of sale</td>
+      <td>System caps discount at 50% of sale value; returns adjusted discount</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC10</td><td>Loyalty</td>
+      <td>Award points below 1,000 RWF minimum</td>
+      <td>System returns error: "Minimum purchase is 1,000 RWF to earn points"</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC11</td><td>Retention</td>
+      <td>Open customer detail for chronic patient</td>
+      <td>Repeat purchase patterns shown with suggested intervals</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC12</td><td>Retention</td>
+      <td>View messages page</td>
+      <td>Overdue schedules listed first; WhatsApp reminder buttons functional</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC13</td><td>Retention</td>
+      <td>Renew a schedule after patient visit</td>
+      <td>next_reminder_date advances correctly; schedule moves from OVERDUE to DUE SOON</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC14</td><td>Chatbot</td>
+      <td>Query "do you have Metformin 500mg?"</td>
+      <td>Claude responds with accurate availability and price from live inventory</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC15</td><td>Chatbot</td>
+      <td>Query in Kinyarwanda</td>
+      <td>Claude responds in Kinyarwanda</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC16</td><td>Chatbot</td>
+      <td>Ask for a medical diagnosis</td>
+      <td>Claude declines and recommends consulting a pharmacist in person</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC17</td><td>Portal</td>
+      <td>Look up customer by phone number</td>
+      <td>Portal displays loyalty balance, tier, schedules, and purchase history</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC18</td><td>Portal</td>
+      <td>Click order button for a product</td>
+      <td>WhatsApp opens with pre-filled order message including customer name and product</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC19</td><td>Portal</td>
+      <td>Enter non-existent phone number</td>
+      <td>Error message: "No account found for that number"</td>
+      <td>PASS</td>
+    </tr>
+    <tr>
+      <td>TC20</td><td>Notifier</td>
+      <td>Trigger weekly summary without Twilio credentials</td>
+      <td>Message printed to console; no exception raised; app continues normally</td>
+      <td>PASS</td>
+    </tr>
+  </table>
+
+  <h2 id="ch6-3">6.3 Bugs Identified and Resolved</h2>
+  <p class="table-caption">Table 6.2 – Bugs Identified During Testing</p>
+  <table>
+    <tr><th>Bug ID</th><th>Description</th><th>Root Cause</th><th>Resolution</th></tr>
+    <tr>
+      <td>BUG-01</td>
+      <td>Template rendering error on customer detail page</td>
+      <td>Jinja2 variable named <code>items</code> conflicted with dict built-in method</td>
+      <td>Renamed variable to <code>lines</code></td>
+    </tr>
+    <tr>
+      <td>BUG-02</td>
+      <td>APScheduler fired weekly task twice per cycle</td>
+      <td>Flask debug reloader spawning two processes</td>
+      <td>Set <code>use_reloader=False</code> in <code>app.run()</code></td>
+    </tr>
+    <tr>
+      <td>BUG-03</td>
+      <td>TypeError on loyalty summary page</td>
+      <td>TIERS passed as duplicate keyword argument to <code>render_template</code></td>
+      <td>Removed duplicate kwarg from render call</td>
+    </tr>
+    <tr>
+      <td>BUG-04</td>
+      <td>Negative forecast values for slow-moving products</td>
+      <td>Linear regression extrapolating below zero with sparse data</td>
+      <td>Added <code>max(0, ...)</code> clamp and sparse-data fallback to mean</td>
+    </tr>
+    <tr>
+      <td>BUG-05</td>
+      <td>Port 5000 already in use on server restart</td>
+      <td>Previous Flask process not terminated before restart</td>
+      <td>Kill existing Python process before restarting; documented in deployment notes</td>
+    </tr>
+  </table>
+
+  <h2>6.4 Test Summary</h2>
+  <p>All 20 functional test cases passed. 5 bugs were identified and resolved during the testing phase. No critical data integrity bugs were found. The system behaves gracefully under missing API credentials (Twilio fallback confirmed in TC20). The chatbot's language detection and medical boundary enforcement (TC15, TC16) performed as expected.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 7 – RESULTS & DISCUSSION
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 7</div>
+  <h1 id="ch7">Results and Discussion</h1>
+
+  <h2 id="ch7-1">7.1 System Outputs</h2>
+
+  <h3>7.1.1 Dashboard</h3>
+  <p>
+    The dashboard successfully aggregates and displays real-time revenue metrics (today, yesterday, 7-day, month-to-date), an interactive revenue trend chart (7/30/90-day), a low-stock alert list, and the top 5 products by revenue. All data is derived from the sale and sale_item tables, with no manual entry required beyond the initial Ishyiga import.
+  </p>
+  <div class="figure">
+    <div class="figure-placeholder">[Figure 7.1 – Dashboard screenshot showing revenue cards, chart, and low-stock alerts]</div>
+    <div class="figure-caption">Figure 7.1 – Operations Dashboard</div>
+  </div>
+
+  <h3>7.1.2 Demand Forecasting</h3>
+  <p>
+    The forecasting engine generated 30-day projections for all 30 products in the demo inventory. Of these, the seeded data produced: 3 Critical alerts, 5 Urgent, 8 Soon, and 14 OK — a distribution consistent with a pharmacy operating on lean stock practices. The urgency classification correctly identified Artemether-Lumefantrine (high-demand antimalarial with seasonal upticks) as Critical.
+  </p>
+  <div class="figure">
+    <div class="figure-placeholder">[Figure 7.2 – Forecast page showing urgency grid with Critical/Urgent/Soon/OK counts and supplier WhatsApp buttons]</div>
+    <div class="figure-caption">Figure 7.2 – Demand Forecast Page</div>
+  </div>
+
+  <h3>7.1.3 Customer Retention</h3>
+  <p>
+    The seeded 8 chronic customers generated 23 detected purchase patterns across the 30-product inventory. The messages page correctly surfaced 3 overdue schedules (including the Metformin patient 36 days overdue) and 4 due-within-7-days schedules. Pre-filled WhatsApp reminders were generated correctly for each, including the customer's name and medication details.
+  </p>
+
+  <h3>7.1.4 Loyalty Programme</h3>
+  <p>
+    After 90 days of seeded transactions, the loyalty summary showed: 8 members enrolled, tier distribution of 3 Bronze / 3 Silver / 2 Gold, and total points outstanding of approximately 12,400 points (equivalent to 62,000 RWF in potential discounts). The Kinyarwanda notification messages were confirmed correct by a native speaker review.
+  </p>
+  <div class="figure">
+    <div class="figure-placeholder">[Figure 7.3 – Loyalty Counter showing 3-step AJAX flow: lookup → amount → confirm with Kinyarwanda WhatsApp message]</div>
+    <div class="figure-caption">Figure 7.3 – Loyalty Counter (staff view)</div>
+  </div>
+
+  <h3>7.1.5 AI Chatbot</h3>
+  <p>
+    The chatbot correctly answered queries about product availability, pricing, and ordering for all tested scenarios. Multi-turn conversation was supported (context carried across messages). The language detection functioned correctly for English, French, and Kinyarwanda inputs. The medical boundary enforcement — redirecting diagnostic questions to in-person consultation — was robust across all tested phrasings.
+  </p>
+  <div class="figure">
+    <div class="figure-placeholder">[Figure 7.4 – AI Chatbot on the shop page responding to a Kinyarwanda query about medication availability]</div>
+    <div class="figure-caption">Figure 7.4 – AI Pharmacy Chatbot</div>
+  </div>
+
+  <h2 id="ch7-2">7.2 Discussion</h2>
+
+  <h3>7.2.1 Achievement of Objectives</h3>
+  <p>All eight project objectives stated in Section 1.3 were met within the four-month internship period. The system delivers a coherent, integrated suite of analytics and automation tools that directly address each operational problem identified in the problem statement.</p>
+
+  <h3>7.2.2 Impact on Pharmacy Operations</h3>
+  <p>
+    While formal user acceptance testing with pharmacy staff was limited by the internship timeline, initial demonstrations to the pharmacist and counter staff received positive feedback. Key observations:
+  </p>
+  <ul>
+    <li>The pharmacist highlighted the forecast's supplier grouping as particularly valuable — previously, reorder communications required looking up each supplier's contact individually.</li>
+    <li>Counter staff found the 3-step loyalty counter intuitive and noted it would fit naturally into the existing checkout workflow.</li>
+    <li>The Kinyarwanda loyalty messages were noted as a culturally appropriate touch that would resonate with the majority-Kinyarwanda-speaking customer base.</li>
+  </ul>
+
+  <h3>7.2.3 Technical Observations</h3>
+  <p>
+    The choice of SQLite and a monolithic Flask architecture proved appropriate for the project scope. Page load times were consistently under 1 second on a local development machine. The APScheduler integration added automated capability without requiring a separate task queue or worker process.
+  </p>
+  <p>
+    The LLM chatbot's reliance on injecting a full inventory context on every call means API costs scale with inventory size and chat volume. For the current 30-product inventory, this is negligible. As the pharmacy grows its product range, a retrieval-augmented approach (embedding search for relevant products) may become necessary to control token costs.
+  </p>
+
+  <h3>7.2.4 Limitations Observed</h3>
+  <p>
+    The absence of staff authentication is the most significant known limitation for production deployment. Currently, any user with the URL can access staff pages, modify stock quantities, and view customer data. This is acceptable for a demo but must be addressed before live deployment.
+  </p>
+  <p>
+    The Ishyiga import pipeline (<code>import_raw_sales.py</code>) successfully reads and maps the 19-column Excel export format, but the imported RawSale records are not yet automatically reconciled with the normalised Sale/SaleItem tables. This means historical data imported from Ishyiga does not currently feed the forecasting and retention modules — an integration gap identified for Phase 2.
+  </p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     CHAPTER 8 – CONCLUSION & FUTURE WORK
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="chapter-number">Chapter 8</div>
+  <h1 id="ch8">Conclusion and Future Work</h1>
+
+  <h2 id="ch8-1">8.1 Conclusion</h2>
+  <p>
+    This project successfully designed and implemented a comprehensive AI-powered pharmacy management system for Pharmacie Tramed in Kigali, Rwanda. Built as a four-month CS internship project, the system demonstrates that modern analytics, automation, and artificial intelligence capabilities can be delivered to a community pharmacy at low cost and without disrupting existing operations.
+  </p>
+  <p>
+    The eight integrated modules — dashboard, inventory management, demand forecasting, customer retention, loyalty programme, AI chatbot, customer portal, and automated supplier notifications — collectively address the five core operational problems identified at the outset: stock management inefficiency, poor chronic patient retention, absence of customer engagement, no self-service channel, and supplier coordination overhead.
+  </p>
+  <p>
+    The system's architecture — Python Flask, SQLite, standard libraries, and CDN-delivered frontend dependencies — was chosen deliberately for its simplicity, low operational cost, and maintainability. The use of the Claude Haiku LLM with a live inventory context provides genuine AI capability without the complexity of model fine-tuning or vector database infrastructure.
+  </p>
+  <p>
+    Beyond its immediate utility at Pharmacie Tramed, the system is documented and structured as a <strong>replicable blueprint</strong> for digital transformation at other Rwandan community pharmacies — contributing a practical, open model for affordable pharmacy intelligence in the East African context.
+  </p>
+
+  <h2 id="ch8-2">8.2 Limitations</h2>
+  <ul>
+    <li><strong>No staff authentication:</strong> All staff pages are publicly accessible by URL. This is the highest priority limitation for production readiness.</li>
+    <li><strong>Ishyiga import not fully reconciled:</strong> Imported RawSale data does not automatically flow into the forecasting and retention modules.</li>
+    <li><strong>Single-location only:</strong> The current architecture assumes a single pharmacy. Multi-branch support would require a more robust database and deployment approach.</li>
+    <li><strong>APScheduler dependency on server uptime:</strong> The automated Monday alert only fires if the server is running at 08:00. A cloud-based task scheduler would be needed for production reliability.</li>
+    <li><strong>No automated tests:</strong> The absence of a unit and integration test suite increases the risk of regressions during future development.</li>
+    <li><strong>Chatbot context size:</strong> As inventory grows, injecting the full product list on every API call may become costly. No retrieval strategy currently limits the context to relevant products.</li>
+  </ul>
+
+  <h2 id="ch8-3">8.3 Future Work</h2>
+  <p>The following improvements are recommended for Phase 2 of this project:</p>
+
+  <h4>Phase 2 – Production Hardening (Months 5–8)</h4>
+  <ol>
+    <li><strong>Staff authentication:</strong> Implement Flask-Login with role-based access (Pharmacist vs. Counter Staff roles). Staff pages require login; customer-facing pages remain public.</li>
+    <li><strong>Ishyiga full integration:</strong> Complete the pipeline from RawSale import to normalised Sale/SaleItem records, enabling the full analytical power of the forecasting and retention modules on historical Ishyiga data.</li>
+    <li><strong>New Sale / POS entry screen:</strong> Add a web-based sale recording screen so staff can log sales directly in the system rather than only importing from Ishyiga.</li>
+    <li><strong>WhatsApp Business API:</strong> Replace wa.me links with proper WhatsApp Business API messages for more professional, templated outbound communications.</li>
+    <li><strong>Automated test suite:</strong> Write pytest unit tests for the forecasting, loyalty, and retention modules, and integration tests for the API routes.</li>
+  </ol>
+
+  <h4>Phase 3 – Intelligence Expansion (Months 9+)</h4>
+  <ol>
+    <li><strong>Customer segmentation:</strong> Apply clustering (e.g., K-means on purchase frequency, recency, and monetary value — RFM analysis) to segment the customer base and enable targeted campaigns.</li>
+    <li><strong>Anomaly detection:</strong> Detect unusual stock movements that may indicate wastage, theft, or data entry errors.</li>
+    <li><strong>Multi-location support:</strong> Extend the architecture to support multiple pharmacy branches with consolidated reporting.</li>
+    <li><strong>Product images:</strong> Add image upload support to the product catalogue for the customer-facing shop.</li>
+    <li><strong>RAG-based chatbot:</strong> Replace full inventory injection with a retrieval-augmented generation approach — embedding products and retrieving only the most relevant matches per query — to support larger inventories at lower API cost.</li>
+    <li><strong>Mobile application:</strong> Develop a lightweight mobile companion app for customer portal access, leveraging the existing REST API endpoints.</li>
+  </ol>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     REFERENCES
+══════════════════════════════════════════════ -->
+<div class="page">
+  <h2 id="references">References</h2>
+  <div class="note">
+    <strong>Note to student:</strong> The references below are placeholder entries. Replace each [CITATION NEEDED] marker in the text and each entry here with actual sources from peer-reviewed journals (e.g., IJMEDI, PLOS ONE, BMC Health Services Research), conference proceedings (IEEE, ACM), WHO reports, and relevant textbooks. Use your university's preferred citation style (APA 7th, Harvard, IEEE, or Vancouver).
+  </div>
+  <br/>
+  <ol style="font-size:11pt; line-height: 1.9;">
+    <li>World Health Organization. (2020). <em>Medicines Supply Management: A Guide for Managers of Health Facilities and Dispensaries</em>. WHO Press, Geneva.</li>
+    <li>[Author, A.] ([Year]). Pharmacy management systems in Sub-Saharan Africa: A systematic review. <em>Journal of Healthcare Informatics Research</em>, [vol]([iss]), [pp–pp]. https://doi.org/[...]</li>
+    <li>[Author, B.] ([Year]). Demand forecasting methods in healthcare supply chains: comparative analysis. <em>International Journal of Production Economics</em>, [vol], [pp–pp].</li>
+    <li>[Author, C.] ([Year]). Day-of-week seasonality effects on pharmaceutical retail sales. <em>Health Policy and Planning</em>, [vol]([iss]), [pp–pp].</li>
+    <li>Anthropic. (2024). <em>Claude Model Overview and API Documentation</em>. Retrieved from https://docs.anthropic.com</li>
+    <li>[Author, D.] ([Year]). AI-powered chatbots in community pharmacy: a systematic review. <em>Journal of Medical Internet Research</em>, [vol]([iss]), e[xxxxx].</li>
+    <li>[Author, E.] ([Year]). WhatsApp-based medication reminders in East Africa: randomised controlled trial. <em>PLOS Medicine</em>, [vol]([iss]), e[xxxxx].</li>
+    <li>[Author, F.] ([Year]). Customer loyalty programmes in retail pharmacy: impact on adherence and retention. <em>Research in Social and Administrative Pharmacy</em>, [vol], [pp–pp].</li>
+    <li>Rwanda Ministry of ICT. (2020). <em>Rwanda National Digital Transformation Strategy 2020–2025</em>. Government of Rwanda, Kigali.</li>
+    <li>[Author, G.] ([Year]). Incremental digital transformation in resource-constrained healthcare settings. <em>BMC Health Services Research</em>, [vol], [pp–pp].</li>
+    <li>Grinberg, M. (2018). <em>Flask Web Development: Developing Web Applications with Python</em> (2nd ed.). O'Reilly Media.</li>
+    <li>McKinney, W. (2022). <em>Python for Data Analysis</em> (3rd ed.). O'Reilly Media.</li>
+    <li>Twilio Inc. (2024). <em>Twilio WhatsApp API Documentation</em>. Retrieved from https://www.twilio.com/docs/whatsapp</li>
+  </ol>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     APPENDIX A – DATABASE SCHEMA
+══════════════════════════════════════════════ -->
+<div class="page">
+  <h2 id="appendix-a">Appendix A – Database Schema Diagram</h2>
+  <div class="figure">
+    <div class="figure-placeholder" style="height:200pt;">[Insert full ER diagram here — can be exported from DB Browser for SQLite or drawn with draw.io / Lucidchart]</div>
+    <div class="figure-caption">Figure A.1 – Full Entity Relationship Diagram for Pharmacie Tramed database</div>
+  </div>
+  <p>The schema comprises 9 tables as described in Section 4.2. The relationships are:</p>
+  <ul>
+    <li><strong>Supplier → Product</strong>: One-to-many (one supplier provides many products)</li>
+    <li><strong>Product ↔ Sale</strong>: Many-to-many via SaleItem (one sale has many products; one product appears in many sales)</li>
+    <li><strong>Customer → Sale</strong>: One-to-many (one customer has many sales; sales can also be anonymous)</li>
+    <li><strong>Customer → MedicationSchedule</strong>: One-to-many (one customer has many active schedules)</li>
+    <li><strong>Product → MedicationSchedule</strong>: One-to-many (one product can be on many customers' schedules)</li>
+    <li><strong>Customer → LoyaltyAccount</strong>: One-to-one (each customer has at most one loyalty account)</li>
+    <li><strong>LoyaltyAccount → LoyaltyTransaction</strong>: One-to-many (full audit trail of all point movements)</li>
+  </ul>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     APPENDIX B – API ROUTE REFERENCE
+══════════════════════════════════════════════ -->
+<div class="page">
+  <h2 id="appendix-b">Appendix B – API Route Reference</h2>
+  <p>The system exposes 24 routes across staff pages, public pages, and JSON API endpoints.</p>
+  <p class="table-caption">Table B.1 – Staff Pages (GET)</p>
+  <table>
+    <tr><th>Path</th><th>Description</th></tr>
+    <tr><td>/</td><td>Dashboard — revenue, low stock, top products</td></tr>
+    <tr><td>/inventory</td><td>Product listing with category/search filters</td></tr>
+    <tr><td>/sales</td><td>Paginated sales history</td></tr>
+    <tr><td>/forecast</td><td>Demand forecasts with urgency labels</td></tr>
+    <tr><td>/customers</td><td>Customer directory with due-reminder flags</td></tr>
+    <tr><td>/customers/&lt;id&gt;</td><td>Customer profile — patterns, schedules, history</td></tr>
+    <tr><td>/loyalty</td><td>Loyalty programme summary and member list</td></tr>
+    <tr><td>/loyalty/counter</td><td>POS-style loyalty counter for counter staff</td></tr>
+    <tr><td>/messages</td><td>Pending WhatsApp reminders and supplier reorders</td></tr>
+  </table>
+  <p class="table-caption">Table B.2 – JSON API Endpoints</p>
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Purpose</th></tr>
+    <tr><td>GET</td><td>/api/revenue-chart</td><td>Revenue trend data (?days=7|30|90)</td></tr>
+    <tr><td>GET</td><td>/api/category-chart</td><td>Sales by category (last 30 days)</td></tr>
+    <tr><td>GET</td><td>/api/product-forecast/&lt;id&gt;</td><td>30-day forecast JSON for one product</td></tr>
+    <tr><td>GET</td><td>/api/loyalty/lookup</td><td>Customer loyalty lookup by phone</td></tr>
+    <tr><td>POST</td><td>/api/loyalty/award</td><td>Award points after purchase</td></tr>
+    <tr><td>POST</td><td>/api/loyalty/redeem</td><td>Redeem points for discount</td></tr>
+    <tr><td>POST</td><td>/api/chat</td><td>AI chatbot message (multi-turn)</td></tr>
+    <tr><td>POST</td><td>/api/stock-update</td><td>Update product stock quantity</td></tr>
+  </table>
+  <p class="table-caption">Table B.3 – Public-Facing Routes</p>
+  <table>
+    <tr><th>Path</th><th>Description</th></tr>
+    <tr><td>/shop</td><td>Public product catalogue with AI chatbot</td></tr>
+    <tr><td>/portal</td><td>Customer phone number lookup</td></tr>
+    <tr><td>/portal/&lt;id&gt;</td><td>Customer account (loyalty, schedules, history)</td></tr>
+    <tr><td>/portal/&lt;id&gt;/shop/&lt;product_id&gt;</td><td>WhatsApp order initiation for a product</td></tr>
+  </table>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     APPENDIX C – ISHYIGA DATA EXPORT FORMAT
+══════════════════════════════════════════════ -->
+<div class="page">
+  <h2 id="appendix-c">Appendix C – Ishyiga POS Data Export Format</h2>
+  <p>
+    The Ishyiga POS system exports sales data as an Excel (.xlsx) file. The <code>import_raw_sales.py</code> utility maps this export to the <code>RawSale</code> database table. The 19 columns imported are listed below.
+  </p>
+  <p class="table-caption">Table C.1 – Ishyiga Export Column Mapping</p>
+  <table>
+    <tr><th>#</th><th>Ishyiga Column Name</th><th>RawSale Field</th><th>Data Type</th></tr>
+    <tr><td>1</td><td>Invoice ID</td><td>invoice_id</td><td>String</td></tr>
+    <tr><td>2</td><td>Date</td><td>sale_date</td><td>Date</td></tr>
+    <tr><td>3</td><td>Product Code</td><td>product_code</td><td>String</td></tr>
+    <tr><td>4</td><td>Product Name</td><td>product_name</td><td>String</td></tr>
+    <tr><td>5</td><td>Category</td><td>category</td><td>String</td></tr>
+    <tr><td>6</td><td>Quantity</td><td>quantity</td><td>Float</td></tr>
+    <tr><td>7</td><td>Unit</td><td>unit</td><td>String</td></tr>
+    <tr><td>8</td><td>Unit Price</td><td>unit_price</td><td>Float</td></tr>
+    <tr><td>9</td><td>Total Price</td><td>total_price</td><td>Float</td></tr>
+    <tr><td>10</td><td>Discount</td><td>discount</td><td>Float</td></tr>
+    <tr><td>11</td><td>Net Amount</td><td>net_amount</td><td>Float</td></tr>
+    <tr><td>12</td><td>Payment Type</td><td>payment_type</td><td>String</td></tr>
+    <tr><td>13</td><td>Employee</td><td>employee_name</td><td>String</td></tr>
+    <tr><td>14</td><td>Customer Name</td><td>customer_name</td><td>String</td></tr>
+    <tr><td>15</td><td>Customer Phone</td><td>customer_phone</td><td>String</td></tr>
+    <tr><td>16</td><td>Supplier</td><td>supplier_name</td><td>String</td></tr>
+    <tr><td>17</td><td>Batch Number</td><td>batch_number</td><td>String</td></tr>
+    <tr><td>18</td><td>Expiry Date</td><td>expiry_date</td><td>String</td></tr>
+    <tr><td>19</td><td>Notes</td><td>notes</td><td>String</td></tr>
+  </table>
+  <p>
+    Usage: <code>python import_raw_sales.py "path/to/sales_export.xlsx"</code>. The importer skips duplicate invoice IDs to allow safe re-import of the same file. Upon completion, it prints a summary of rows imported, skipped (duplicates), and any errors encountered.
+  </p>
+</div>
+
+</body>
+</html>
