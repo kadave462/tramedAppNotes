@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ishyiga POS — Database Location Notes</title>
+  <style>
+    body { font-family: Segoe UI, Arial, sans-serif; background: #f4f6f9; color: #222; margin: 0; padding: 24px; }
+    h1 { color: #1a4fa0; border-bottom: 3px solid #1a4fa0; padding-bottom: 8px; }
+    h2 { color: #2563a8; margin-top: 32px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th { background: #1a4fa0; color: #fff; padding: 8px 12px; text-align: left; }
+    td { padding: 8px 12px; border: 1px solid #c8d3e6; }
+    tr:nth-child(even) td { background: #eef2fa; }
+    code { background: #e8ecf5; padding: 2px 6px; border-radius: 3px; font-size: 0.97em; font-family: Consolas, monospace; }
+    .path-box { background: #1e2a3a; color: #7dd3a8; font-family: Consolas, monospace; padding: 12px 16px; border-radius: 6px; margin: 8px 0; font-size: 0.98em; }
+    .section { background: #fff; border-radius: 8px; padding: 18px 22px; margin-bottom: 20px; box-shadow: 0 1px 4px #0001; }
+    .label { font-weight: bold; color: #1a4fa0; }
+    .note { background: #fff8e1; border-left: 4px solid #f0a500; padding: 10px 14px; border-radius: 4px; margin-top: 10px; }
+    .date { color: #888; font-size: 0.88em; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<h1>Ishyiga POS — Database Location Notes</h1>
+<p class="date">Documented: June 23, 2026 &nbsp;|&nbsp; Machine: TRAMED</p>
+
+<div class="section">
+  <h2>Database Engine</h2>
+  <p><span class="label">Engine:</span> Apache Derby (embedded Java database)</p>
+  <p><span class="label">Network Port:</span> <code>1527</code></p>
+  <p><span class="label">JDBC URL:</span> <code>jdbc:derby://localhost:1527/TRAMEDNYARUGENGE</code></p>
+  <p><span class="label">Application JAR:</span></p>
+  <div class="path-box">E:\Ishyiga_tramed new Package\POS_V2-10.3.0-shaded.jar</div>
+  <p><span class="label">Desktop Shortcut:</span> <code>C:\Users\TRAMED\Desktop\ISHYIGA.lnk</code></p>
+</div>
+
+<div class="section">
+  <h2>Primary Database</h2>
+  <p>The main live POS database is stored as an Apache Derby directory at:</p>
+  <div class="path-box">E:\Ishyiga_tramed new Package\TRAMEDNYARUGENGE\</div>
+  <table>
+    <tr><th>Item inside folder</th><th>Purpose</th></tr>
+    <tr><td><code>seg0\</code></td><td>Data segments (actual table data)</td></tr>
+    <tr><td><code>log\</code></td><td>Transaction log</td></tr>
+    <tr><td><code>tmp\</code></td><td>Temporary working files</td></tr>
+    <tr><td><code>db.lck</code></td><td>Database lock file (present when DB is running)</td></tr>
+    <tr><td><code>service.properties</code></td><td>Derby internal configuration</td></tr>
+    <tr><td><code>BACKUP.HISTORY</code></td><td>Backup history log (~13 MB)</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>Additional Derby Databases — LOCAL folder</h2>
+  <p>These are sub-databases used for SDC device and local data, all under:</p>
+  <div class="path-box">E:\Ishyiga_tramed new Package\LOCAL\</div>
+  <table>
+    <tr><th>Database Folder</th><th>Purpose</th></tr>
+    <tr><td><code>TRAMEDNYARUGENGE\</code></td><td>Local replica of the main POS database</td></tr>
+    <tr><td><code>BL_SDC008000392\</code></td><td>Billing data for SDC device #392</td></tr>
+    <tr><td><code>MVIN_SDC008000392\</code></td><td>Stock movements IN</td></tr>
+    <tr><td><code>MVOUT_SDC008000392\</code></td><td>Stock movements OUT</td></tr>
+    <tr><td><code>SDC008000392\</code></td><td>SDC receipt transaction records</td></tr>
+    <tr><td><code>STOCK_SDC008000392\</code></td><td>Stock data</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>SERVER1 Copy</h2>
+  <div class="path-box">E:\Ishyiga_tramed new Package\SERVER1\TRAMEDNYARUGENGE\</div>
+  <p>Also contains SDC sub-databases mirroring the LOCAL structure.</p>
+</div>
+
+<div class="section">
+  <h2>Rolling Backups (5 slots)</h2>
+  <div class="path-box">E:\Ishyiga_tramed new Package\bcp\0\TRAMEDNYARUGENGE\
+E:\Ishyiga_tramed new Package\bcp\1\TRAMEDNYARUGENGE\
+E:\Ishyiga_tramed new Package\bcp\2\TRAMEDNYARUGENGE\
+E:\Ishyiga_tramed new Package\bcp\3\TRAMEDNYARUGENGE\
+E:\Ishyiga_tramed new Package\bcp\4\TRAMEDNYARUGENGE\</div>
+  <p>Slots 2 and 4 also contain <code>.OLD</code> versions of the database from previous backup cycles.</p>
+</div>
+
+<div class="section">
+  <h2>SDC Daily CSV Exports (Rwanda Revenue Authority)</h2>
+  <div class="path-box">E:\Ishyiga_tramed new Package\SDCDATA\</div>
+  <p>Hundreds of daily files named <code>DATA_YYYYMMDD.csv</code>, exported for RRA compliance (SDC reporting). Data goes back to at least June 2021.</p>
+</div>
+
+<div class="section">
+  <h2>Network Backup Target</h2>
+  <p>The database is also backed up over the network to:</p>
+  <div class="path-box">\\192.168.0.31\e\Ishyiga backup\Unipharma\End Of The Day\ishyiga</div>
+  <p>(Referenced in <code>TRAMEDNYARUGENGE\service.properties</code>)</p>
+</div>
+
+<div class="section">
+  <h2>Related Project (hirwa-spark-bind)</h2>
+  <p>A secondary Java application that also connects to the Ishyiga Derby database:</p>
+  <div class="path-box">C:\Users\TRAMED\Downloads\hirwa-spark-bind-develop\hirwa-spark-bind-develop\</div>
+  <p>Config example: <code>src\main\resources\application.properties.example</code></p>
+  <p>Key settings:</p>
+  <div class="path-box">db.url=jdbc:derby://localhost:1527/TRAMEDNYARUGENGE
+db.path=E:\Ishyiga_tramed new Package\TRAMEDNYARUGENGE</div>
+</div>
+
+<div class="section">
+  <h2>Summary — Quick Reference</h2>
+  <table>
+    <tr><th>What</th><th>Where</th></tr>
+    <tr><td>Main live database</td><td><code>E:\Ishyiga_tramed new Package\TRAMEDNYARUGENGE\</code></td></tr>
+    <tr><td>Application JAR</td><td><code>E:\Ishyiga_tramed new Package\POS_V2-10.3.0-shaded.jar</code></td></tr>
+    <tr><td>Local sub-databases</td><td><code>E:\Ishyiga_tramed new Package\LOCAL\</code></td></tr>
+    <tr><td>Backups</td><td><code>E:\Ishyiga_tramed new Package\bcp\0-4\TRAMEDNYARUGENGE\</code></td></tr>
+    <tr><td>SDC CSV exports</td><td><code>E:\Ishyiga_tramed new Package\SDCDATA\</code></td></tr>
+    <tr><td>Network backup</td><td><code>\\192.168.0.31\e\Ishyiga backup\...</code></td></tr>
+  </table>
+  <div class="note">
+    The database is an Apache Derby embedded DB stored as a <strong>folder</strong>, not a single file.
+    The folder <code>TRAMEDNYARUGENGE</code> IS the database. Do not move or rename its contents manually.
+  </div>
+</div>
+
+</body>
+</html>
